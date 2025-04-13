@@ -1,0 +1,75 @@
+﻿//::Part:Tooling
+//:[Source
+class Tooling {
+   // General Language Extensions
+   static {
+      self.Fault = (i) => { throw new Error(i); };
+      self.Required = (i) => { return (i != null) ? i : Fault(`${i} Required`); };
+      self.Default = (i, d) => { return (i != null) ? i : d; };
+      self.Validate = (i, validationFn, errorMessage = 'Validation failed') => { return validationFn(i) ? i : Fault(errorMessage); };
+      self.Exists = (v) => { return v !== null && typeof v !== 'undefined'; };
+      self.NotExists = (v) => { return !(v !== null && typeof v !== 'undefined'); };
+   };
+
+   // Document Tools
+   static {
+      self.SetDocument = (content) => { const doc = document.open(); doc.write(content); doc.close(); };
+      self.clearContent = (elm) => { while (elm.firstChild) { elm.removeChild(elm.firstChild); } };
+
+      self.addToBody = (e) => document.body.appendChild(e);
+      self.addManyToBody = (eg) => eg.forEach(e => addToBody(e));
+      self.addTo = (p, e) => p.appendChild(e);
+      self.addManyTo = (p, eg) => eg.forEach(e => addTo(p, e));
+
+      self.addxToBody = (e) => { clearContent(document.body); document.body.appendChild(e); };
+      self.addxManyToBody = (eg) => { clearContent(document.body); eg.forEach(e => addToBody(e)); };
+      self.addxTo = (p, e) => { clearContent(p); p.appendChild(e); };
+      self.addxManyTo = (p, eg) => { clearContent(p); eg.forEach(e => addTo(p, e)); };
+   };
+
+   // Some tools to help manage stylettes
+   static {
+      self.kebab = (str) => str.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/_/g, '-').toLowerCase();
+      self.pascal = (str) => str.replace(/(^\w|-\w)/g, (match) => match.replace('-', '').toUpperCase());
+      self.camel = (str) => str.toLowerCase().replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+
+      self.flat = (v) => Array.isArray(v) ? v.flat(Infinity).join('') : String(v);
+      self.crunch = (v) => typeof v === 'string' ? v.trim().replace(/\s+/g, ' ') : String(v).trim().replace(/\s+/g, ' ');
+      self.clean = (v) => crunch(flat(v));
+      self.toRule = (prop, value) => value && prop ? `${prop}:${value};` : '';
+
+      self.splitRules = (stylette) => {
+         const map = new Map();
+         const ruleSet = flat(stylette).split(';').filter(rule => rule.trim() !== '');
+         for (let rule of ruleSet) {
+            const [prop, value] = rule.split(':').map(s => s.trim());
+            map.set(prop, value);
+         };
+         return map;
+      };
+
+      self.joinRules = (map) => {
+         return Array.from(map).map(([prop, value]) => `${prop}:${value}`).join(';') + ';';
+      };
+
+      self.unionRules = (s1, s2) => {
+         const m1 = splitRules(s1);
+         const m2 = splitRules(s2);
+         const resultMap = new Map([...m1, ...m2]);
+         return joinRules(resultMap);
+      };
+   };
+
+   static {
+      self.applyStylette = (elm, stylette) => {
+         if (!elm || !stylette) return;
+         const stylette_ = clean(stylette);
+         const rules = splitRules(stylette_);
+         for (const rule of rules) {
+            if (!rule[0] || !rule[1]) continue;
+            elm.style[camel(rule[0])] = rule[1];
+         }
+      };
+   };
+};
+//:]Source

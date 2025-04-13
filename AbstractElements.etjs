@@ -1,0 +1,83 @@
+﻿//::Part:EditTextBase
+// Abstract Element for editable text.
+
+//:[Settings
+self.EditTextBaseSettings = class {
+   static typeStyle = new Styling({
+      Space: stylex.spaces.BlockSpace,
+      Skin: stylex.edges.SingleBlack
+   });
+
+   static States = class {
+      static Unchanged = class {
+         static Chroma = new Chroma({ Edge: "black", Back: "white" });
+         static get stylette() { return this.Chroma.stylette; };
+      };
+      static Changing = class {
+         static Chroma = new Chroma({ Focus: "purple" });
+         static get stylette() { return this.Chroma.stylette; };
+      };
+      static Changed = class {
+         static Chroma = new Chroma({ Edge: "red", Back: "lightgrey" });
+         static get stylette() { return this.Chroma.stylette; };
+      };
+   };
+};
+//:]Settings
+
+//:[Source
+self.EditTextBase = class extends HTMLElement {
+   static cfg = self.Settings.EditTextBase ?? self.EditTextBaseSettings ?? (() => {
+      throw new Error("Neither self.Settings.typeSettings nor self.typeSettings exists.");
+   })();
+
+   static typeStyle = this.cfg.typeStyle;
+
+   #value_start;
+   #value;
+   #changed = false;
+
+   #states;
+
+   constructor(text) {
+      super();
+      this.#value = text;
+      this.textContent = this.#value;
+
+      this.#states = this.constructor.cfg.States;
+
+      this.onclick = this.#edit_start;
+      this.onblur = this.#edit_end;
+      this.onkeydown = this.#edit_end;
+
+      applyStylette(this, this.#states.Unchanged.stylette);
+   };
+
+   get Changed() { return this.#changed; };
+   get Value() { return this.#value; };
+   set Value(v) { this.#value = v; this.textContent = this.#value; };
+
+   #edit_start(event) {
+      event.stopPropagation();
+      this.#value_start = this.textContent;
+      this.contentEditable = true;
+      this.#states.Changing.Chroma.stylon(this);
+      //applyStylette(this, this.#states.Changing.stylette);
+      this.focus();
+   };
+
+   #edit_end(event) {
+      event.stopPropagation();
+      if (event.type === 'blur' || (event.type === 'keydown' && (event.key === 'Enter' || event.key === 'Tab'))) {
+         this.contentEditable = false;
+         this.#value = this.textContent;
+         if (this.#value != this.#value_start) {
+            this.#changed = true;
+            applyStylette(this, this.#states.Changed.stylette);
+         } else {
+            applyStylette(this, this.#states.Unchanged.stylette);
+         };
+      };
+   };
+};
+//:]Source

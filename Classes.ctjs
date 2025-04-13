@@ -1,0 +1,66 @@
+﻿//::Part:Chroma
+//:[Source
+self.Chroma = class Chroma {
+   Back;
+   Fore;
+   Edge;
+   Focus;
+
+   constructor({ Back = "", Fore = "", Edge = "", Focus = "" }) {
+      this.Back = Back;
+      this.Fore = Fore;
+      this.Edge = Edge;
+      this.Focus = Focus;
+   }
+
+   toString() {
+      return clean([
+         toRule("background-color", this.Back),
+         toRule("color", this.Fore),
+         toRule("border-color", this.Edge),
+         toRule("outline-color", this.Focus)]);
+   };
+
+   get stylette() {
+      return this.toString();
+   };
+
+   stylon(elm) {
+      elm.style.BackgroundColor = this.Back;
+      elm.style.Color = this.Fore;
+      elm.style.OutlineColor = this.Focus;
+      elm.style.BorderColor = this.Edge;
+   };
+};
+//:]Source
+
+//::Part:Styling
+//:[Source
+self.Styling = class Styling {
+   Space;
+   Skel;
+   Skin;
+
+   constructor({ Space = "", Skel = "", Skin = "" }) {
+      this.Space = Space;
+      this.Skel = Skel;
+      this.Skin = Skin;
+   }
+
+   toString() {
+      return clean([
+         clean(this.Space),
+         clean(this.Skel),
+         clean(this.Skin)
+      ]);
+   }
+
+   get stylette() {
+      return this.toString();
+   }
+};
+//:]Source
+
+//:[Test
+
+//:]Test

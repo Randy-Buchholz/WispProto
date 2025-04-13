@@ -1,0 +1,72 @@
+﻿//::Part:ButtonUp
+/* Triggers on Up */
+
+//:[Settings
+self.Settings.ButtonUp = class {
+   static height = 30;
+   static width = 120;
+};
+//:]Settings
+
+//:[Source
+class ButtonUp extends Stype {
+   static cfg = self.Settings.ButtonUp;
+   static typeStyle = [
+      `position:relative;display:block;`,
+      `height: ${this.cfg.height}px; width: ${this.cfg.width}px;`,
+      `border:1px solid black;`,
+      `align-content:center; text-align:center;`
+   ];
+   static { regElm(this); };
+
+   text;
+   action;
+
+   Stylon = class {
+      static Idle(elm) {
+         elm.style.backgroundColor = "blue";
+         elm.innerText = elm.text;
+      }
+      static Over(elm) {
+         elm.style.backgroundColor = "green";
+      }
+      static Down(elm) {
+         elm.style.backgroundColor = "yellow";
+         elm.innerText = "Pending";
+      }
+   };
+
+   constructor(text, action) {
+      super();
+      this.text = text;
+      this.action = action;
+      this.textContent = this.text;
+
+      this.onmouseover = () => this.Stylon.Over(this);
+      this.onmouseleave = () => this.Stylon.Idle(this);
+      this.onmousedown = () => this.Stylon.Down(this);
+      this.onmouseup = () => {
+         this.Stylon.Idle(this);
+         this.action();
+      };
+      this.Stylon.Idle(this);
+   };
+};
+//:]Source
+
+//:[Test
+class ReportLine extends HTMLElement {
+   static { regElm(this); };
+   constructor(text) {
+      super();
+      this.innerText = text;
+   };
+}
+
+self.ButtonTests = class {
+   static Run() {
+      const b = new elm.ButtonUp("Click Me", () => addToBody(new elm.ReportLine("Clicked")));
+      addToBody(b);
+   };
+};
+//:]Test 

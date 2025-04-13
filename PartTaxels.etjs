@@ -1,0 +1,104 @@
+﻿//::Part:FormLine
+//:[Source
+class FormLine extends HTMLElement {
+   static cfg = Settings.PersonContact;
+   static typeStyle = new Styling({
+      Space: `position:relative;display:flex;`,
+      Skel: `gap:${this.cfg.lineGaps}px;`
+   });
+   static {
+      regElm(this);
+   };
+};
+//:]Source
+
+//::Part:PersonName
+//:[Source
+class PersonName extends FormLine {
+   static {
+      regElm(this);
+   };
+   static {
+      class FirstName extends EditTextBase { static { regElm(this, `flex:4;`); } };
+      class MiddleName extends EditTextBase { static { regElm(this, `flex:1;`); } };
+      class LastName extends EditTextBase { static { regElm(this, `flex:5;`); } };
+   };
+
+   first;
+   middle;
+   last;
+
+   constructor({
+      First: arg0, first = Required(arg0),
+      Middle: arg1, middle = Default(arg1, ""),
+      Last: arg2, last = Required(arg2)
+   }) {
+      super();
+      this.first = new elm.FirstName(first);
+      this.middle = new elm.MiddleName(middle);
+      this.last = new elm.LastName(last);
+      addManyTo(this, [this.first, this.middle, this.last]);
+   };
+};
+
+//:]Source
+
+//::Part:StreetAddress
+//:[Source
+class StreetAddress extends FormLine {
+   static {
+      regElm(this);
+   };
+   static {
+      class BuildingNumber extends EditTextBase { static { regElm(this, `flex:1;`); } };
+      class RoadName extends EditTextBase { static { regElm(this, `flex:4;`); } };
+      class BuildingUnit extends EditTextBase { static { regElm(this, `flex:1;`); } };
+   };
+
+   building;
+   road;
+   unit;
+
+   constructor({
+      Building: arg0, building = Required(arg0),
+      Road: arg1, road = Required(arg1),
+      Unit: arg2, unit = Default(arg2, "")
+   }) {
+      super();
+      this.building = new elm.BuildingNumber(building);
+      this.road = new elm.RoadName(road);
+      this.unit = new elm.BuildingUnit(unit);
+      addManyTo(this, [this.building, this.road, this.unit]);
+   };
+};
+//:]Source
+
+//::Part:Municipality
+//:[Source
+class MuniUs extends FormLine {
+   static {
+      regElm(this);
+   };
+   static {
+      class MuniCity extends EditTextBase { static { regElm(this, `flex:5;`); } };
+      class MuniCounty extends EditTextBase { static { regElm(this, `flex:4;`); } };
+      class MuniState extends EditTextBase { static { regElm(this, `flex:1;`); } };
+   };
+
+   city;
+   county;
+   state;
+
+   constructor({
+      City: arg0, city = Required(arg0),
+      County: arg1, county = Required(arg1),
+      State: arg2, state = Required(arg2)
+   }) {
+      super();
+      this.city = new elm.MuniCity(city);
+      this.county = new elm.MuniCounty(county);
+      this.state = new elm.MuniState(state);
+      addManyTo(this, [this.city, this.county, this.state]);
+   };
+};
+//:]Source

@@ -1,0 +1,60 @@
+﻿//::Part:PersonContact
+//:[Source
+class PersonContact extends HTMLElement {
+   static cfg = self.Settings.PersonContact;
+   static typeStyle = [
+      stylex.spaces.FlexSpace,
+      `flex-direction:column;gap:${this.cfg.cellGaps}px;`,
+      `width:${this.cfg.size}px;`
+   ];
+   static { regElm(this); };
+
+   #name;
+   #street;
+   #muni;
+
+   get Name() { return this.#name; }
+   get Street() { return this.#street; }
+   get Muni() { return this.#muni; }
+
+   constructor({
+      Name: {
+         First: arg0, first = Required(arg0),
+         Middle: arg1, middle = Default(arg1, ""),
+         Last: arg2, last = Required(arg2)
+      },
+      Street: {
+         Building: arg3, building = Required(arg3),
+         Road: arg4, road = Required(arg4),
+         Unit: arg5, unit = Default(arg5, "")
+      },
+
+      Muni: {
+         City: arg6, city = Required(arg6),
+         County: arg7, county = Required(arg7),
+         State: arg8, state = Required(arg8)
+      } }) {
+      super();
+
+      this.#name = new elm.PersonName({ first, middle, last });
+      this.#street = new elm.StreetAddress({ building, road, unit });
+      this.#muni = new elm.MuniUs({ city, county, state });
+
+      addManyTo(this, [this.#name, this.#street, this.#muni]);
+   }
+}
+//:]Source
+
+//:[Test
+self.PersonContactTest = class {
+   static Deploy() {
+      const personContact = new elm.PersonContact({
+         Name: { First: "Randy", Middle: "D", Last: "Buchholz" },
+         Street: { Building: "4423", Road: "Maple" },
+         Muni: { City: "Austin", County: "Travis", State: "TX" }
+      });
+      addToBody(personContact);
+   }
+};
+//:]Test
+
