@@ -1,6 +1,9 @@
 ﻿//::SettingsRepository
+/*
+This file is used to override the default settings on parts.
+*/
 
-/* ********   Edit Boxes Common   ******** */
+/* ********   Edit Text Base   ******** */
 self.Settings.EditTextBase = class {
    static typeStyle = new Styling({
       Space: stylex.spaces.BlockSpace,
@@ -24,8 +27,8 @@ self.Settings.EditTextBase = class {
 };
 
 /* ********   Person Contact   ******** */
-self.Settings.PersonContact = class {
-   static size = 600;
-   static cellGaps = 6;
-   static lineGaps = 6;
-};
+//self.Settings.PersonContact = class {
+//   static size = 600;
+//   static cellGaps = 6;
+//   static lineGaps = 6;
+//};

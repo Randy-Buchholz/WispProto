@@ -1,0 +1,54 @@
+﻿//::Part:PersonName
+//::Uses:EditTextBase
+
+//:[Settings
+self.PersonNameSettings = class {
+   static FirstFlex = 4;
+   static MiddleFlex = 1;
+   static LastFlex = 5;
+};
+//:]Settings
+
+//:[Source
+class PersonName extends FormLine {
+   static cfg = GetSettings(this.name, PersonNameSettings);
+   static { regElm(this); };
+
+   static {
+      class FirstName extends EditTextBase { static { regElm(this, `flex:${PersonName.cfg.FirstFlex};`); } };
+      class MiddleName extends EditTextBase { static { regElm(this, `flex:${PersonName.cfg.MiddleFlex};`); } };
+      class LastName extends EditTextBase { static { regElm(this, `flex:${PersonName.cfg.LastFlex};`); } };
+   };
+
+   #first;
+   get First() { return this.#first.Value; };
+   set First(v) { this.#first.Value = v; };
+
+   #middle;
+   get Middle() { return this.#middle.Value; };
+   set Middle(v) { this.#middle.Value = v; };
+
+   #last;
+   get Last() { return this.#last.Value; };
+   set Last(v) { this.#last.Value = v; };
+
+   constructor({
+      First: arg0, first = Required(arg0),
+      Middle: arg1, middle = Default(arg1, ""),
+      Last: arg2, last = Required(arg2)
+   }) {
+      super();
+      this.#first = new elm.FirstName(first);
+      this.#middle = new elm.MiddleName(middle);
+      this.#last = new elm.LastName(last);
+      addManyTo(this, [this.#first, this.#middle, this.#last]);
+   };
+};
+//:]Source
+
+//:[Test
+self.PersonName = new elm.PersonName({ First: "Molly", Middle: "M", Last: "Malone" });
+PersonName.First = "MollyChanged";
+PersonName.Middle = "?";
+PersonName.Last = "MaloneChanged";
+//:]Test

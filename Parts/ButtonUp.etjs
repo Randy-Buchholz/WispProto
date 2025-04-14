@@ -2,21 +2,27 @@
 /* Triggers on Up */
 
 //:[Settings
-self.Settings.ButtonUp = class {
-   static height = 30;
-   static width = 120;
+self.ButtonUpSettings = class {
+   static Height = 30;
+   static Width = 120;
+   static IdleColor = "lightblue"; 
+   static HoverColor = "lightgreen"; 
+   static PressedColor = "yellow"; 
+   static PressedText = "Pending"; 
 };
 //:]Settings
 
 //:[Source
 class ButtonUp extends Stype {
-   static cfg = self.Settings.ButtonUp;
+   static cfg = GetSettings(this.name, ButtonUpSettings);
+
    static typeStyle = [
       `position:relative;display:block;`,
-      `height: ${this.cfg.height}px; width: ${this.cfg.width}px;`,
+      `height: ${ButtonUp.cfg.Height}px; width: ${ButtonUp.cfg.Width}px;`,
       `border:1px solid black;`,
       `align-content:center; text-align:center;`
    ];
+
    static { regElm(this); };
 
    text;
@@ -24,15 +30,15 @@ class ButtonUp extends Stype {
 
    Stylon = class {
       static Idle(elm) {
-         elm.style.backgroundColor = "blue";
+         elm.style.backgroundColor = ButtonUp.cfg.IdleColor;
          elm.innerText = elm.text;
       }
       static Over(elm) {
-         elm.style.backgroundColor = "green";
+         elm.style.backgroundColor = ButtonUp.cfg.HoverColor;
       }
       static Down(elm) {
-         elm.style.backgroundColor = "yellow";
-         elm.innerText = "Pending";
+         elm.style.backgroundColor = ButtonUp.cfg.PressedColor;
+         elm.innerText = ButtonUp.cfg.PressedText;
       }
    };
 
@@ -61,7 +67,7 @@ class ReportLine extends HTMLElement {
       super();
       this.innerText = text;
    };
-}
+};
 
 self.ButtonTests = class {
    static Run() {

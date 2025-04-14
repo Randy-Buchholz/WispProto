@@ -1,0 +1,50 @@
+﻿//::Part:Municipality
+//::Uses:EditTextBase
+
+//:[Settings
+self.MuniUsaSettings = class {
+   static CityFlex = 4;
+   static CountyFlex = 5;
+   static StateFlex = 1;
+};
+//:]Settings
+
+//:[Source
+class MuniUsa extends FormLine {
+   static cfg = GetSettings(this.name, MuniUsaSettings);
+   static { regElm(this); };
+   static {
+      class MuniCity extends EditTextBase { static { regElm(this, `flex:${MuniUsa.cfg.CityFlex};`); } };
+      class MuniCounty extends EditTextBase { static { regElm(this, `flex:${MuniUsa.cfg.CountyFlex};`); } };
+      class MuniState extends EditTextBase { static { regElm(this, `flex:${MuniUsa.cfg.StateFlex};`); } };
+   };
+
+   #city;
+   get City() { return this.#city.Value; };
+   set City(v) { this.#city.Value = v; };
+
+   #county;
+   get County() { return this.#county.Value; };
+   set County(v) { this.#county.Value = v; };
+
+   #state;
+   get State() { return this.#state.Value; };
+   set State(v) { this.#state.Value = v; };
+
+   constructor({
+      City: arg0, city = Required(arg0),
+      County: arg1, county = Required(arg1),
+      State: arg2, state = Required(arg2)
+   }) {
+      super();
+      this.#city = new elm.MuniCity(city);
+      this.#county = new elm.MuniCounty(county);
+      this.#state = new elm.MuniState(state);
+      addManyTo(this, [this.#city, this.#county, this.#state]);
+   };
+};
+//:]Source
+
+//:[Test
+self.Municipality = new elm.MuniUsa({City:"Rollingwood", County:"Travis", State: "TX"});
+//:]Test

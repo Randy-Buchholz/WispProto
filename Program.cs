@@ -43,6 +43,7 @@ static class Host {
       }
    }
 
+
    interface Bom {
       static String Tooling => Assets.Source("Tooling", "Tooling.js");
       static String Classes => Assets.Source(["Chroma", "Styling"], "Classes.ctjs");
@@ -54,19 +55,20 @@ static class Host {
       static String Settings = File.ReadAllText(Path.Combine(cd, "Settings.js"));
 
       static String AbstractElements => Assets.Part("EditTextBase", "AbstractElements.etjs");
-      static String CommonElements => Assets.Part("ButtonUp", "CommonElements.etjs");
-      static String PartTaxels => Assets.Source(["FormLine", "PersonName", "StreetAddress", "Municipality"], "PartTaxels.etjs");
-      static String PersonContactTaxel => Assets.Source("PersonContact", "PersonContactTaxel.etjs");
+      static String ButtonUp => ItemMaster.ButtonUp;
+      static String LayoutParts => Assembly.LayoutParts;
+      static String TaxelParts => Assembly.ContactParts;
+      static String PersonContactTaxel => Assets.Part("PersonContact", "PersonContactTaxel.etjs");
 
 
       // Tests
       static String PersonContactTest => Assets.Test("PersonContact", "PersonContactTaxel.etjs");
-      static String ButtonsTest => Assets.Test("ButtonUp", "CommonElements.etjs");
+      static String ButtonsTest => Assets.Test("ButtonUp", "Parts\\ButtonUp.etjs");
 
       // Boot
       static String BootPatch = String.Join("\n", [
-         "ReadyCheck.onBody(() => PersonContactTest.Deploy());",
-         "ReadyCheck.onBody(() => ButtonTests.Run());"
+         "ReadyCheck.onBody(() => PersonContactTest.Run());",
+         //"ReadyCheck.onBody(() => ButtonTests.Run());"
          ]);
    }
 
@@ -88,10 +90,11 @@ static class Host {
         {{Bom.WispCore}}
         {{Bom.Settings}}
         {{Bom.AbstractElements}}
-        {{Bom.CommonElements}}
+        {{Bom.ButtonUp}}
         </script>
         <script id="parts">
-        {{Bom.PartTaxels}}
+        {{Bom.LayoutParts}}
+        {{Bom.TaxelParts}}
         </script>
         <script id="components">
         {{Bom.PersonContactTaxel}}

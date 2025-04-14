@@ -1,0 +1,50 @@
+﻿//::Part:StreetAddress
+//::Uses:EditTextBase
+
+//:[Settings
+self.StreetAddressSettings = class {
+   static BuildingFlex = 1;
+   static RoadFlex = 4;
+   static UnitFlex = 1;
+};
+//:]Settings
+
+//:[Source
+class StreetAddress extends FormLine {
+   static cfg = GetSettings(this.name, StreetAddressSettings);
+   static { regElm(this); };
+   static {
+      class BuildingNumber extends EditTextBase { static { regElm(this, `flex:${StreetAddress.cfg.BuildingFlex};`); }; };
+      class RoadName extends EditTextBase { static { regElm(this, `flex:${StreetAddress.cfg.RoadFlex};`); }; };
+      class BuildingUnit extends EditTextBase { static { regElm(this, `flex:${StreetAddress.cfg.UnitFlex};`); }; };
+   };
+
+   #building;
+   get Building() { return this.#building.Value; };
+   set Building(v) { this.#building.Value = v; };
+
+   #road;
+   get Road() { return this.#road.Value; };
+   set Road(v) { this.#road.Value = v; };
+
+   #unit;
+   get Unit() { return this.#unit.Value; };
+   set Unit(v) { this.#unit.Value = v; };
+
+   constructor({
+      Building: arg0, building = Required(arg0),
+      Road: arg1, road = Required(arg1),
+      Unit: arg2, unit = Default(arg2, "")
+   }) {
+      super();
+      this.#building = new elm.BuildingNumber(building);
+      this.#road = new elm.RoadName(road);
+      this.#unit = new elm.BuildingUnit(unit);
+      addManyTo(this, [this.#building, this.#road, this.#unit]);
+   };
+};
+//:]Source
+
+//:[Test
+self.StreetAddress = new elm.StreetAddress({ Building: "154", Road: "Main Street", Unit: "" });
+//:]Test

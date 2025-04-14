@@ -1,0 +1,24 @@
+﻿//::Part:FormLine
+
+//:[Settings
+self.FormLineSettings = class {
+   static LineCellGap = 6;
+};
+//:]Settings
+
+//:[Source
+class FormLine extends HTMLElement {
+   static cfg = GetSettings(this.name, FormLineSettings);
+
+   static typeStyle = new Styling({
+      Space: `position:relative;display:flex;`,
+      Skel: `gap:${FormLine.cfg.LineCellGap}px;`
+   });
+
+   static { regElm(this); };
+};
+//:]Source
+
+//:[Test
+
+//:]Test

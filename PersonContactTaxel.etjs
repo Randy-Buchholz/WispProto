@@ -1,17 +1,42 @@
 ﻿//::Part:PersonContact
+//::Uses:PersonName, StreetAddress, MuniUsa
+
+//:[Settings
+self.PersonContactSettings = class {
+   static RowGap = 6;
+   static Width = 600;
+};
+//:]Settings
+
 //:[Source
 class PersonContact extends HTMLElement {
-   static cfg = self.Settings.PersonContact;
+   static cfg = GetSettings(this.name, PersonContactSettings);
+
    static typeStyle = [
       stylex.spaces.FlexSpace,
-      `flex-direction:column;gap:${this.cfg.cellGaps}px;`,
-      `width:${this.cfg.size}px;`
+      `flex-direction:column;gap:${PersonContact.cfg.RowGap}px;`,
+      `width:${PersonContact.cfg.Width}px;`
    ];
+
    static { regElm(this); };
+
+   static {
+      class ContactControlRow extends FormLine {
+         static { regElm(this); };
+         #buttons = [];
+         constructor() {
+            super();
+            this.#buttons.push(new elm.ButtonUp("View 1", () => { }));
+            this.#buttons.push(new elm.ButtonUp("View 2", () => { }));
+            addManyTo(this, this.#buttons);
+         };
+      };
+   };
 
    #name;
    #street;
    #muni;
+   #controls;
 
    get Name() { return this.#name; }
    get Street() { return this.#street; }
@@ -38,22 +63,30 @@ class PersonContact extends HTMLElement {
 
       this.#name = new elm.PersonName({ first, middle, last });
       this.#street = new elm.StreetAddress({ building, road, unit });
-      this.#muni = new elm.MuniUs({ city, county, state });
-
-      addManyTo(this, [this.#name, this.#street, this.#muni]);
+      this.#muni = new elm.MuniUsa({ city, county, state });
+      this.#controls = new elm.ContactControlRow();
+      this.#view1();
    }
+
+   // MVC-Type Stuff
+   #view1(){ addManyTo(this, [this.#name, this.#street, this.#muni, this.#controls]); }
+   #view2(){ addManyTo(this, [this.#name, this.#street, this.#muni, this.#controls]); }
+   
 }
 //:]Source
 
 //:[Test
 self.PersonContactTest = class {
+   static Run() {
+      this.Deploy();
+   }
    static Deploy() {
-      const personContact = new elm.PersonContact({
+      self.PersonContact = new elm.PersonContact({
          Name: { First: "Randy", Middle: "D", Last: "Buchholz" },
          Street: { Building: "4423", Road: "Maple" },
          Muni: { City: "Austin", County: "Travis", State: "TX" }
       });
-      addToBody(personContact);
+      addToBody(self.PersonContact);
    }
 };
 //:]Test

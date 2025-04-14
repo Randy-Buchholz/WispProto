@@ -38,6 +38,8 @@ class Tooling {
       self.clean = (v) => crunch(flat(v));
       self.toRule = (prop, value) => value && prop ? `${prop}:${value};` : '';
 
+      self.GetSettings = (pri, sec) => self.Settings[pri] ?? sec ?? (() => { throw new Error("Settings not found."); })();
+
       self.splitRules = (stylette) => {
          const map = new Map();
          const ruleSet = flat(stylette).split(';').filter(rule => rule.trim() !== '');

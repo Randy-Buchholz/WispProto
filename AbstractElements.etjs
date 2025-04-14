@@ -3,11 +3,13 @@
 
 //:[Settings
 self.EditTextBaseSettings = class {
+   // Required
    static typeStyle = new Styling({
       Space: stylex.spaces.BlockSpace,
       Skin: stylex.edges.SingleBlack
    });
 
+   // Required
    static States = class {
       static Unchanged = class {
          static Chroma = new Chroma({ Edge: "black", Back: "white" });
@@ -27,10 +29,7 @@ self.EditTextBaseSettings = class {
 
 //:[Source
 self.EditTextBase = class extends HTMLElement {
-   static cfg = self.Settings.EditTextBase ?? self.EditTextBaseSettings ?? (() => {
-      throw new Error("Neither self.Settings.typeSettings nor self.typeSettings exists.");
-   })();
-
+   static cfg = GetSettings(this.name, self.EditTextBaseSettings);
    static typeStyle = this.cfg.typeStyle;
 
    #value_start;
