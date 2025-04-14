@@ -24,10 +24,9 @@ class PersonContact extends HTMLElement {
       class ContactControlRow extends FormLine {
          static { regElm(this); };
          #buttons = [];
-         constructor() {
+         constructor(buttons) {
             super();
-            this.#buttons.push(new elm.ButtonUp("View 1", () => { }));
-            this.#buttons.push(new elm.ButtonUp("View 2", () => { }));
+            this.#buttons = buttons;
             addManyTo(this, this.#buttons);
          };
       };
@@ -64,14 +63,25 @@ class PersonContact extends HTMLElement {
       this.#name = new elm.PersonName({ first, middle, last });
       this.#street = new elm.StreetAddress({ building, road, unit });
       this.#muni = new elm.MuniUsa({ city, county, state });
-      this.#controls = new elm.ContactControlRow();
+      this.#controls = new elm.ContactControlRow([
+         new elm.ButtonUp("View 1", () => this.#view1()),
+         new elm.ButtonUp("View 2", () => this.#view2())
+      ]);
       this.#view1();
    }
 
    // MVC-Type Stuff
-   #view1(){ addManyTo(this, [this.#name, this.#street, this.#muni, this.#controls]); }
-   #view2(){ addManyTo(this, [this.#name, this.#street, this.#muni, this.#controls]); }
-   
+
+   #view1() {
+      addxManyTo(this, [this.#name, this.#street, this.#muni, this.#controls]);
+      this.#name.FirstLast();
+   }
+
+   #view2() {
+      addxManyTo(this, [this.#name, this.#street, this.#muni, this.#controls]);
+      this.#name.LastFirst();
+   }
+
 }
 //:]Source
 

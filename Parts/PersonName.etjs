@@ -41,8 +41,12 @@ class PersonName extends FormLine {
       this.#first = new elm.FirstName(first);
       this.#middle = new elm.MiddleName(middle);
       this.#last = new elm.LastName(last);
-      addManyTo(this, [this.#first, this.#middle, this.#last]);
+      this.FirstLast();
    };
+
+   FirstLast() { addxManyTo(this, [this.#first, this.#middle, this.#last]); };
+   LastFirst() { addxManyTo(this, [this.#last, this.#first, this.#middle]); };
+
 };
 //:]Source
 
