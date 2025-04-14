@@ -60,15 +60,15 @@ static class Host {
       static String TaxelParts => Assembly.ContactParts;
       static String PersonContactTaxel => Assets.Part("PersonContact", "PersonContactTaxel.etjs");
 
+      static String Logger = Assets.Source("ScreenLogger", "Parts\\ScreenLogger.etjs");
 
       // Tests
       static String PersonContactTest => Assets.Test("PersonContact", "PersonContactTaxel.etjs");
-      static String ButtonsTest => Assets.Test("ButtonUp", "Parts\\ButtonUp.etjs");
 
       // Boot
       static String BootPatch = String.Join("\n", [
-         "ReadyCheck.onBody(() => PersonContactTest.Run());",
-         //"ReadyCheck.onBody(() => ButtonTests.Run());"
+         "ReadyCheck.onBody(() => { self.Logger = new elm.ScreenLogger(); addToBody(Logger); })",
+         "ReadyCheck.onBody(() => PersonContactTest.Run());"
          ]);
    }
 
@@ -95,13 +95,13 @@ static class Host {
         <script id="parts">
         {{Bom.LayoutParts}}
         {{Bom.TaxelParts}}
+        {{Bom.Logger}}
         </script>
         <script id="components">
         {{Bom.PersonContactTaxel}}
         </script>
         <script id="boot">
         {{Bom.PersonContactTest}}
-        {{Bom.ButtonsTest}}
         {{Bom.BootPatch}}
         </script>
         </head>

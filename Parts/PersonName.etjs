@@ -44,6 +44,7 @@ class PersonName extends FormLine {
       this.FirstLast();
    };
 
+   // Views
    FirstLast() { addxManyTo(this, [this.#first, this.#middle, this.#last]); };
    LastFirst() { addxManyTo(this, [this.#last, this.#first, this.#middle]); };
 

@@ -3,7 +3,7 @@
 
 //:[Settings
 self.ButtonUpSettings = class {
-   static Height = 30;
+   static Height = 24;
    static Width = 120;
    static IdleColor = "lightblue"; 
    static HoverColor = "lightgreen"; 
@@ -18,7 +18,7 @@ class ButtonUp extends Stype {
 
    static typeStyle = [
       `position:relative;display:block;`,
-      `height: ${ButtonUp.cfg.Height}px; width: ${ButtonUp.cfg.Width}px;`,
+      `height: ${ButtonUp.cfg.Height}px; flex:1;`,
       `border:1px solid black;`,
       `align-content:center; text-align:center;`
    ];

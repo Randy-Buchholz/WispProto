@@ -37,10 +37,14 @@ class PersonContact extends HTMLElement {
    #muni;
    #controls;
 
+   // Elements
    get Name() { return this.#name; }
    get Street() { return this.#street; }
    get Muni() { return this.#muni; }
 
+   // Models
+   get Shape() { return this.#model1(); }
+   get Facets() { return this.#model2(); }
    constructor({
       Name: {
          First: arg0, first = Required(arg0),
@@ -64,14 +68,17 @@ class PersonContact extends HTMLElement {
       this.#street = new elm.StreetAddress({ building, road, unit });
       this.#muni = new elm.MuniUsa({ city, county, state });
       this.#controls = new elm.ContactControlRow([
-         new elm.ButtonUp("View 1", () => this.#view1()),
-         new elm.ButtonUp("View 2", () => this.#view2())
+         new elm.ButtonUp("FirstLast View", () => this.#view1()),
+         new elm.ButtonUp("LastFirst View", () => this.#view2()),
+         new elm.ButtonUp("Shape Model", () => Logger.Log(this.Shape)),
+         new elm.ButtonUp("Facet Model", () => Logger.Log(this.Facets))
       ]);
       this.#view1();
    }
 
    // MVC-Type Stuff
 
+   // Views
    #view1() {
       addxManyTo(this, [this.#name, this.#street, this.#muni, this.#controls]);
       this.#name.FirstLast();
@@ -82,6 +89,40 @@ class PersonContact extends HTMLElement {
       this.#name.LastFirst();
    }
 
+   // Models
+   #model1() {
+      const shape = `\
+      <PersonContact>
+         <Name>
+            <First>${this.Name.First}</First>
+            <Middle>${this.Name.Middle}</Middle>
+            <Last>${this.Name.Last}</Last>
+         </Name>
+         <Address>
+            <Building>${this.Street.Building}</building>
+            <Road>${this.Street.Road}</Road>
+            <Unit>${this.Street.Unit}</Unit>
+         </Address>
+         <Municipality>
+            <City>${this.Muni.City}</City>
+            <County>${this.Muni.County}</County>
+            <State>${this.Muni.State}</State>
+         </Municipality>
+      </PersonContact>
+     `;
+      return shape;
+   }
+
+   #model2() {
+      const facets = `\
+      <PersonContact>
+         <Name last="${this.Name.Last}" first="${this.Name.First}" middleInitial="${this.Name.Middle.charAt(0)}" />
+         <Street number="${this.Street.Building}" road="${this.Street.Road}" unit="${this.Street.Unit}" />
+         <Town city="${this.Muni.City}" state="${this.Muni.State}" />
+      </PersonContact>
+      `;
+      return facets;
+   };
 }
 //:]Source
 
@@ -92,9 +133,9 @@ self.PersonContactTest = class {
    }
    static Deploy() {
       self.PersonContact = new elm.PersonContact({
-         Name: { First: "Randy", Middle: "D", Last: "Buchholz" },
+         Name: { First: "Molly", Middle: "May", Last: "Malone" },
          Street: { Building: "4423", Road: "Maple" },
-         Muni: { City: "Austin", County: "Travis", State: "TX" }
+         Muni: { City: "Dublin", County: "Travis", State: "TX" }
       });
       addToBody(self.PersonContact);
    }
