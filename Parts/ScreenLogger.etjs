@@ -4,21 +4,25 @@ class ScreenLogger extends HTMLElement {
    static typeStyle = [
       `position:fixed;display:block;`,
       `bottom:10px;height:300px;width:600px;`,
-      `border:1px solid black;padding:10px;`
+      `border:1px solid black;padding:10px;`,
+      `overflow:auto;`
    ];
 
-   static { regElm(this); };
+   static {
+      regElm(this);
+      self.Logger = new elm.ScreenLogger();
+   };
 
    #raw = document.createElement("pre");
 
    constructor() {
       super();
-      this.style.overflow = 'auto';
-      this.appendChild(this.#raw);
+      addTo(this, this.#raw);
+      System.onBody(() => addToBody(Logger));
    };
 
    Log(text) {
-      this.#raw.textContent += (text + "\n");
+      this.#raw.textContent = text + "\n" + this.#raw.textContent;
    };
 
 };

@@ -43,32 +43,35 @@ static class Host {
       }
    }
 
-
    interface Bom {
-      static String Tooling => Assets.Source("Tooling", "Tooling.js");
-      static String Classes => Assets.Source(["Chroma", "Styling"], "Classes.ctjs");
-      static String Stylex => Assets.Source("Stylex", "Stylex.js");
-      static String WispCore => Assets.Source(["SimpleSettings", "SimpleSheets", "SimpleElms", "Stereotyping"], "CES.js");
-      static String BodyReadyCheck => Assets.Source("ReadyCheck", "SystemControl.js");
+      static String System => Assets.Source("System", "Sys\\SystemControl.js");
+      static String Logger = Assets.Source("ScreenLogger", "Parts\\ScreenLogger.etjs");
+      static String Tooling => Assets.Source("Tooling", "Sys\\Tooling.js");
 
-      // Consolidated Settings
-      static String Settings = File.ReadAllText(Path.Combine(cd, "Settings.js"));
-
-      static String AbstractElements => Assets.Part("EditTextBase", "AbstractElements.etjs");
-      static String ButtonUp => ItemMaster.ButtonUp;
+      static String SyncronParts => Assembly.Synchrons;
+      static String WispCore => Assembly.WispCore;
       static String LayoutParts => Assembly.LayoutParts;
       static String TaxelParts => Assembly.ContactParts;
-      static String PersonContactTaxel => Assets.Part("PersonContact", "PersonContactTaxel.etjs");
+      static String StylingClasses => Assembly.StylingParts;
 
-      static String Logger = Assets.Source("ScreenLogger", "Parts\\ScreenLogger.etjs");
+      static String StylexCore => Assets.Source("Stylex", "Sys\\Stylex.js");
+      static String WispTooling =>Assets.Source("CESTooling", "Sys\\CESTooling.js");
+
+      // TypeStyle and Stylex Settings Overrides
+      static String PartSettings = File.ReadAllText(Path.Combine(cd, "Config\\Settings.js"));
+      static String StylexSettings = File.ReadAllText(Path.Combine(cd, "Config\\Stylex.js"));
+
+      // Parts and Components
+      static String EditTextBase => Assets.Part("EditTextBase", "Parts\\EditTextBase.etjs");
+      static String ButtonUp => ItemMaster.ButtonUp;
+      static String PersonContact => Assets.Part("PersonContact", "Components\\PersonContact.etjs");
 
       // Tests
-      static String PersonContactTest => Assets.Test("PersonContact", "PersonContactTaxel.etjs");
+      static String PersonContactTest => Assets.Test("PersonContact", "Components\\PersonContact.etjs");
 
       // Boot
       static String BootPatch = String.Join("\n", [
-         "ReadyCheck.onBody(() => { self.Logger = new elm.ScreenLogger(); addToBody(Logger); })",
-         "ReadyCheck.onBody(() => PersonContactTest.Run());"
+         "System.onBody(() => PersonContactTest.Run());"
          ]);
    }
 
@@ -80,25 +83,30 @@ static class Host {
         <meta charset="UTF-8">  
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Wisp</title>
-        <script id="kernel">
+        <script id="post">
         {{Bom.Tooling}}
-        {{Bom.Classes}}
-        {{Bom.Stylex}}
-        {{Bom.BodyReadyCheck}}
+        {{Bom.SyncronParts}}
+        {{Bom.System}}
         </script>
-        <script id="common">
+        <script id="kernel">
+        {{Bom.StylingClasses}}
+        {{Bom.WispTooling}}
         {{Bom.WispCore}}
-        {{Bom.Settings}}
-        {{Bom.AbstractElements}}
-        {{Bom.ButtonUp}}
+        {{Bom.StylexCore}}
+        </script>
+        <script id="config">
+        {{Bom.Logger}}
+        {{Bom.PartSettings}}
+        {{Bom.StylexSettings}}
+        {{Bom.EditTextBase}}
         </script>
         <script id="parts">
+        {{Bom.ButtonUp}}
         {{Bom.LayoutParts}}
         {{Bom.TaxelParts}}
-        {{Bom.Logger}}
         </script>
         <script id="components">
-        {{Bom.PersonContactTaxel}}
+        {{Bom.PersonContact}}
         </script>
         <script id="boot">
         {{Bom.PersonContactTest}}

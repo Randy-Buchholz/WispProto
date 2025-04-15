@@ -1,4 +1,6 @@
 ﻿//::Part:SimpleSettings
+//::Uses:CESTooling
+
 //:[Source
 self.Settings = class { }
 //:]Source
@@ -52,3 +54,4 @@ customRules.stype = (cls, type, stylettes) => {
     customRules.define(`${tag}[stype='${type}']`, stylettes);
 };
 //:]Source
+

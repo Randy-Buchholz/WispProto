@@ -1,0 +1,53 @@
+﻿//::Part:Gate
+//:[Source
+self.Gate = class Gate {
+    Open; Gate;
+    constructor() {
+        this.Gate = new Promise((l, _) => {
+            this.Open = (msg = "") => {
+                console.log(msg);
+                l();
+            };
+        });
+    };
+};
+//:]Source
+
+//::Part:Barrier
+//:[Source
+self.Barrier = class Barrier {
+    #title = "";
+    #phase = 0;
+    #gates = []; #participants = 0; #remaining = 0;
+
+    LogGate(s = "") { console.log(`${this.#title}:${this.#phase} ${s} ${this.#participants - this.#remaining}:${this.#participants}`); }
+    LogRelease(phase) { console.log(`${this.#title}:${phase} released`); }
+    constructor(count, title) {
+        this.#participants = count;
+        this.#remaining = count;
+        this.#title = title ?? "";
+    };
+
+    AddParticipant() { this.#participants++; this.#remaining++; };
+    AddParticipants(num) { this.#participants += num; this.#remaining += num; };
+    RemoveParticipant() { this.#participants--; this.#remaining--; };
+    RemoveParticipants(num) { this.#participants -= num; this.#remaining -= num; };
+
+    async SignalAndWait(mark = "") {
+        const g = new Gate();
+        this.#gates.push(g);
+        this.#remaining--;
+        if (this.#remaining == 0) {
+            queueMicrotask(() => {
+                this.#gates.forEach(w => w.Open());
+                this.#gates = [];
+                this.#remaining = this.#participants;
+                this.#phase++;
+                this.LogRelease(this.#phase - 1);
+            });
+        }
+        this.LogGate(`${mark}`);
+        return g.Gate;
+    };
+};
+//:]Source

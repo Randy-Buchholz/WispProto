@@ -1,4 +1,6 @@
 ﻿//::Part:Chroma
+//:[Settings
+//:]Settings
 //:[Source
 self.Chroma = class Chroma {
    Back;
@@ -33,34 +35,3 @@ self.Chroma = class Chroma {
    };
 };
 //:]Source
-
-//::Part:Styling
-//:[Source
-self.Styling = class Styling {
-   Space;
-   Skel;
-   Skin;
-
-   constructor({ Space = "", Skel = "", Skin = "" }) {
-      this.Space = Space;
-      this.Skel = Skel;
-      this.Skin = Skin;
-   }
-
-   toString() {
-      return clean([
-         clean(this.Space),
-         clean(this.Skel),
-         clean(this.Skin)
-      ]);
-   }
-
-   get stylette() {
-      return this.toString();
-   }
-};
-//:]Source
-
-//:[Test
-
-//:]Test

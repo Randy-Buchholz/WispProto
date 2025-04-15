@@ -1,6 +1,6 @@
-﻿//::Part:ReadyCheck
+﻿//::Part:System
 //:[Source
-class ReadyCheck {
+self.System = class System {
    static eventListeners = [];
    static {
       if (document.body) {
@@ -25,12 +25,12 @@ class ReadyCheck {
 
 //:[Test
 // Subscribe to the event
-ReadyCheck.onBody(() => {
+System.onBody(() => {
    console.log('Body is now available. Executing subscribed actions...');
    // Your logic here
 });
 
-ReadyCheck.onBody(() => {
+System.onBody(() => {
    console.log('Another subscriber reacting to body availability.');
 });
 //:]Test
